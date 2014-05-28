@@ -11,7 +11,6 @@ from xml.dom import minidom
 import traceback
 
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(levelname)s - %(message)s')
 
 class CDL():
     XML_CDL='xml_cdl'
@@ -175,6 +174,7 @@ class ColorCorrection():
         return ','.join((str(self.slope),str(self.power),str(self.offset),str(self.saturation)))
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(levelname)s - %(message)s')
     cdl=CDL()
     cdl.load(sys.argv[1])
     correction=cdl.firstColorDecision().firstCorrection()
