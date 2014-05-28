@@ -5,7 +5,7 @@ import pycdl
 
 setup(
     name='pycdl',
-    version=edl.__version__,
+    version=pycdl.__version__,
     description='Simple CDL reading library',
     author='Simon Hargreaves',
     author_email='simon@simon-hargreaves.com',
