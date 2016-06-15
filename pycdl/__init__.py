@@ -3,7 +3,7 @@
 Python CDL parsing library
 """
 
-__version__ = '0.5.2'
+__version__ = '0.5.3'
 
 
 __author__ = 'simon'
@@ -112,7 +112,7 @@ class CDL(object):
             edl_io = StringIO.StringIO(cdl_string)
             edl_list = parser.parse(edl_io)
             for event in edl_list:
-                color_correction = ColorCorrection(cdl_edl_strings=event.get_comments())
+                color_correction = ColorCorrection(cdl_edl_strings=event.get_comments(),source_file=self._filename)
                 self._color_items.append(color_correction)        
 
     def get_dom(self, cdl_string):
