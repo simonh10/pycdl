@@ -190,7 +190,7 @@ $RECYCLE.BIN/
 #############
 
 *.py[cod]
-
+*py.class
 # Packages
 *.egg
 *.egg-info
