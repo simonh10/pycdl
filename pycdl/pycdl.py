@@ -7,6 +7,7 @@ __author__ = 'simon'
 import sys
 import logging
 import json
+import os
 import re
 import StringIO
 from xml.dom import minidom
@@ -45,7 +46,9 @@ class CDL(object):
         self._cdl_string = None
         self._color_items = []
         self._item_type = CDL.COLOR_DECISION
+        self._filename = None
         if filename:
+            self._filename = os.path.basename(filename)
             self.load(filename)
 
 
@@ -119,12 +122,12 @@ class CDL(object):
         if len(xmldoc.getElementsByTagName('ColorDecision')) > 0:
             self._item_type = CDL.COLOR_DECISION
             for node in xmldoc.getElementsByTagName('ColorDecision'):
-                color_decision = ColorDecision(node)
+                color_decision = ColorDecision(node, source_file=self._filename)
                 self._color_items.append(color_decision)
         elif len(xmldoc.getElementsByTagName('ColorCorrection')) > 0:
             self._item_type = CDL.COLOR_CORRECTION
             for node in xmldoc.getElementsByTagName('ColorCorrection'):
-                color_correction = ColorCorrection(node)
+                color_correction = ColorCorrection(node, source_file=self._filename)
                 self._color_items.append(color_correction)            
         else:
             raise Exception("No color decisions found")
@@ -160,13 +163,14 @@ class ColorDecision(object):
     A singular color decision can contain multiple color corrections
     """
 
-    def __init__(self, color_decision_node=None, decision_id=None):
+    def __init__(self, color_decision_node=None, decision_id=None, source_file=None):
         """
         initialise object with a color decision dom object, optional
         """
         self._decision_tree = color_decision_node
         self._corrections = []
         self._decision_id = decision_id
+        self._source_file = source_file
         if color_decision_node:
             self.load_dom(self._decision_tree)
 
@@ -201,7 +205,7 @@ class ColorDecision(object):
                         exception)
         color_corrections = decision_dom.getElementsByTagName('ColorCorrection')
         for correction in color_corrections:
-            color_correction = ColorCorrection(correction)
+            color_correction = ColorCorrection(correction, source_file=self._source_file)
             self.append(color_correction)
 
     def __repr__(self):
@@ -231,7 +235,7 @@ class ColorCorrection(object):
     """
     An individual color correction object
     """
-    def __init__(self, color_correction_node=None, cdl_edl_strings=None):
+    def __init__(self, color_correction_node=None, cdl_edl_strings=None, source_file=None):
         """
         initialise object with a color correction dom object, optional
         """
@@ -241,6 +245,7 @@ class ColorCorrection(object):
         self._offset = (0.0, 0.0, 0.0)
         self._saturation = 1.0
         self._id = None
+        self._source_file = source_file
         self._cdl_matchers = [r"\*\s*ASC_SOP \((\d\.\d+) (\d\.\d+) (\d\.\d+)\)\((\d\.\d+) (\d\.\d+) (\d\.\d+)\)\((\d\.\d+) (\d\.\d+) (\d\.\d+)\)", r"\*\s*ASC_SAT (\d\.\d+)", r"\*\s*FROM CLIP NAME\:\s+(\w+)"]
         if color_correction_node:
             self.load_dom(color_correction_node)
@@ -250,7 +255,6 @@ class ColorCorrection(object):
                 
 
     def process_edl_string(self, s):
-        logging.warning(s)
         if re.match(self._cdl_matchers[0], s):
             m = re.match(self._cdl_matchers[0], s)
             self._slope = (float(m.group(1)),float(m.group(2)), float(m.group(3)))
@@ -344,10 +348,18 @@ class ColorCorrection(object):
                 logging.log(logging.ERROR, exception)
         return tuple(values)
 
-    @property
-    def correction_id(self):
+    def set_correction_id(self,correction_id):
+        self._id = correction_id
+        
+    def get_correction_id(self):
         return self._id
 
+    correction_id = property(get_correction_id, set_correction_id)
+
+    @property
+    def filename(self):
+        return self._source_file
+    
     @property
     def slope(self):
         return self._slope
