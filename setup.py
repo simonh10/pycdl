@@ -1,18 +1,31 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+
+from setuptools import setup, find_packages
+from codecs import open 
+from os import path
+
+here = path.abspath(path.dirname(__file__))
+
+with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description  = f.read()
+
 import pycdl
+
+requires = []
 
 setup(
     name='pycdl',
     version=pycdl.__version__,
     description='Simple CDL reading library',
+    long_description=long_description,
     author='Simon Hargreaves',
     author_email='simon@simon-hargreaves.com',
-    url='http://www.simon-hargreaves.com/pycdl',
+    license='MIT',
+    url='https://github.com/simonh10/pycdl',
     packages=['pycdl'],
     classifiers=[
-       'Development Status :: 3 - Alpha',
+       'Development Status :: 4 - Beta',
        'Environment :: Console',
        'Intended Audience :: Developers',
        'License :: OSI Approved :: MIT License',
@@ -23,5 +36,6 @@ setup(
        'Natural Language :: English',
        'Topic :: Multimedia :: Video',
        'Topic :: Software Development :: Libraries'
-    ]
+    ],
+    keywords='color cdl edl decision list avid'
 )
