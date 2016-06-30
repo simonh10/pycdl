@@ -45,7 +45,7 @@ class CorrectionEDLTestCase(unittest.TestCase):
     def setUp(self):
         self.cc = ColorCorrection(
                 cdl_edl_strings=[
-                    "*ASC_SOP (0.9491 0.9552 0.9853)(0.1494 0.1645 0.2036)(1.5717 1.5728 1.5539)",
+                    "*ASC_SOP (0.9491 0.9552 0.9853)(-0.1494 0.1645 0.2036)(1.5717 1.5728 1.5539)",
                     "*ASC_SAT 0.75",
                     "*FROM CLIP NAME:  dra_001_0002_v0003"
                 ]
@@ -54,9 +54,27 @@ class CorrectionEDLTestCase(unittest.TestCase):
     def test_cc(self):
         self.assertEqual(self.cc.correction_id,"dra_001_0002_v0003")
         self.assertEqual(self.cc.slope,(0.9491,0.9552,0.9853))
-        self.assertEqual(self.cc.offset,(0.1494,0.1645,0.2036))
+        self.assertEqual(self.cc.offset,(-0.1494,0.1645,0.2036))
         self.assertEqual(self.cc.power,(1.5717,1.5728,1.5539))
         self.assertEqual(self.cc.saturation,0.75)
+
+class CorrectionEDLTestCaseMinus(unittest.TestCase):
+    def setUp(self):
+        self.cc = ColorCorrection(
+                cdl_edl_strings=[
+                    "*ASC_SOP (-0.9491 -0.9552 -0.9853)(-0.1494 -0.1645 -0.2036)(-1.5717 -1.5728 -1.5539)",
+                    "*ASC_SAT -0.75",
+                    "*FROM CLIP NAME:  dra_001_0002_v0003"
+                ]
+            )
+    
+    def test_cc(self):
+        self.assertEqual(self.cc.correction_id,"dra_001_0002_v0003")
+        self.assertEqual(self.cc.slope,(-0.9491,-0.9552,-0.9853))
+        self.assertEqual(self.cc.offset,(-0.1494,-0.1645,-0.2036))
+        self.assertEqual(self.cc.power,(-1.5717,-1.5728,-1.5539))
+        self.assertEqual(self.cc.saturation,-0.75)
+
 
 class CDLEDLTestCase(unittest.TestCase):
     def setUp(self):

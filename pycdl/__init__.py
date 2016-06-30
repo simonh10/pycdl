@@ -250,7 +250,7 @@ class ColorCorrection(object):
         self._saturation = 1.0
         self._id = None
         self._source_file = source_file
-        self._cdl_matchers = [r"\*\s*ASC_SOP \((\d\.\d+) (\d\.\d+) (\d\.\d+)\)\((\d\.\d+) (\d\.\d+) (\d\.\d+)\)\((\d\.\d+) (\d\.\d+) (\d\.\d+)\)", r"\*\s*ASC_SAT (\d\.\d+)", r"\*\s*FROM CLIP NAME\:\s+(\w+)"]
+        self._cdl_matchers = [r"\*\s*ASC_SOP \((\-*\d\.\d+) (\-*\d\.\d+) (\-*\d\.\d+)\)\((\-*\d\.\d+) (\-*\d\.\d+) (\-*\d\.\d+)\)\((\-*\d\.\d+) (\-*\d\.\d+) (\-*\d\.\d+)\)", r"\*\s*ASC_SAT (\-*\d\.\d+)", r"\*\s*FROM CLIP NAME\:\s+(\w+)"]
         if color_correction_node:
             self.load_dom(color_correction_node)
         elif cdl_edl_strings:
