@@ -13,7 +13,6 @@ import logging
 import json
 import os
 import re
-import StringIO
 from xml.dom import minidom
 import traceback
 allow_edls = False
@@ -109,8 +108,7 @@ class CDL(object):
         if self._edls_enabled:
             self.item_type = CDL.COLOR_CORRECTION
             parser = edl.Parser(self._timebase)
-            edl_io = StringIO.StringIO(cdl_string)
-            edl_list = parser.parse(edl_io)
+            edl_list = parser.parse(cdl_string)
             for event in edl_list:
                 color_correction = ColorCorrection(cdl_edl_strings=event.get_comments(),source_file=self._filename)
                 self._color_items.append(color_correction)        
